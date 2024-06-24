@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Auth\admins;
+namespace App\Http\Controllers\Auth\chairman;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
+use App\Models\Chairman;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
@@ -28,14 +29,16 @@ class ChairmanAuthController extends Controller
         }
 
 
-        $admin = new Admin([
+        $chairman = new Chairman([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
 
-        $admin->save();
-        return response()->json(['message' => 'Admin registered successfully'], 201);
+        $chairman->save();
+        $token = JWTAuth::fromUser($chairman);
+
+        return response()->json(['message' => 'Citizen registered successfully', 'token' => $token, 'payload' => $payload], 201);
         // Return a response or redirect
     }
 

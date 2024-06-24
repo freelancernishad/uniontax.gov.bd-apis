@@ -29,7 +29,13 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api')
                  ->middleware('api')
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/api_routes.php'));
+                 ->group(base_path('routes/api.php'));
+
+            // Register API routes
+            Route::prefix('user')
+                //  ->middleware('api')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/user.php'));
 
             // Register web routes
             Route::middleware('web')
@@ -37,33 +43,40 @@ class RouteServiceProvider extends ServiceProvider
                  ->group(base_path('routes/web.php'));
 
             // Register admin routes
-            Route::prefix('auth')
-                 ->middleware(['api', 'auth:admin'])
+            Route::prefix('admin')
+                //  ->middleware(['api', 'auth:admin'])
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/admin_routes.php'));
+                 ->group(base_path('routes/admin.php'));
 
 
             // Register chairman routes
-            Route::prefix('v')
-                 ->middleware(['api', 'auth:chairman'])
+            Route::prefix('chairman')
+                //  ->middleware(['api', 'auth:chairman'])
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/chairman_routes.php'));
+                 ->group(base_path('routes/chairman.php'));
 
             // Register secretary routes
             Route::prefix('auth')
                  ->middleware(['api', 'auth:secretary'])
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/secretary_routes.php'));
+                 ->group(base_path('routes/secretary.php'));
 
-            // Register sonod_routes routes
+
+            // Register secretary routes
+            Route::prefix('auth')
+                 ->middleware(['api', 'auth:citizen'])
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/citizen.php'));
+
+            // Register sonod routes
             Route::prefix('v1')
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/sonod_routes.php'));
+                 ->group(base_path('routes/sonod.php'));
 
-            // Register sonod_routes routes
+            // Register sonod routes
             Route::prefix('v1')
                  ->namespace($this->namespace)
-                 ->group(base_path('routes/holding_tax_routes.php'));
+                 ->group(base_path('routes/holding_tax.php'));
         });
     }
 

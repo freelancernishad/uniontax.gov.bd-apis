@@ -63,6 +63,12 @@ return [
             'provider' => 'secretaries',
             'secret' => env('SECRETARY_JWT_SECRET'), // Replace with your secretary secret key
         ],
+
+        'citizen' => [
+            'driver' => 'token',
+            'provider' => 'citizens',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -101,6 +107,12 @@ return [
         'secretaries' => [
             'driver' => 'eloquent',
             'model' => App\Models\Secretary::class,
+        ],
+
+
+        'citizens' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Citizen::class,
         ],
     ],
 

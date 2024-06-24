@@ -35,7 +35,16 @@ class AdminAuthController extends Controller
         ]);
 
         $admin->save();
-        return response()->json(['message' => 'Admin registered successfully'], 201);
+
+        $payload = [
+            'name'=>$admin->name,
+            'email'=>$admin->email,
+        ];
+
+
+        $token = JWTAuth::fromUser($admin);
+
+        return response()->json(['message' => 'Citizen registered successfully', 'token' => $token, 'payload' => $payload], 201);
         // Return a response or redirect
     }
 

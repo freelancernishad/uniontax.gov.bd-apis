@@ -54,7 +54,7 @@ return [
 
         'chairman' => [
             'driver' => 'jwt',
-            'provider' => 'chairmen',
+            'provider' => 'chairman',
             'secret' => env('CHAIRMAN_JWT_SECRET'), // Replace with your chairman secret key
         ],
 
@@ -99,7 +99,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'chairmen' => [
+        'chairman' => [
             'driver' => 'eloquent',
             'model' => App\Models\Chairman::class,
         ],

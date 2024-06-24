@@ -11,6 +11,10 @@ Route::post('/login', [ChairmanAuthController::class, 'login']);
 Route::post('/register', [ChairmanAuthController::class, 'register']);
 
 Route::middleware(['auth:chairman'])->group(function () {
+
+    Route::post('/check-token', [ChairmanAuthController::class, 'checkToken']);
+    Route::post('/check/login', [ChairmanAuthController::class, 'checkTokenExpiration']);
+
     Route::post('/logout', [ChairmanAuthController::class, 'logout']);
     Route::get('/access', function (Request $request) {
         return 'chairman access';

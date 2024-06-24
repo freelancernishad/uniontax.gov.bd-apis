@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth\chairman;
 
-use App\Models\Admin;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
@@ -20,7 +19,7 @@ class ChairmanAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins',
+            'email' => 'required|string|email|max:255|unique:chairmen',
             'password' => 'required|string|min:8',
         ]);
 
@@ -36,9 +35,15 @@ class ChairmanAuthController extends Controller
         ]);
 
         $chairman->save();
+
+        $payload = [
+            'name'=>$chairman->name,
+            'email'=>$chairman->email,
+        ];
+
         $token = JWTAuth::fromUser($chairman);
 
-        return response()->json(['message' => 'Citizen registered successfully', 'token' => $token, 'payload' => $payload], 201);
+        return response()->json(['message' => 'Chairman registered successfully', 'token' => $token, 'payload' => $payload], 201);
         // Return a response or redirect
     }
 
@@ -47,9 +52,9 @@ class ChairmanAuthController extends Controller
           $credentials = $request->only('email', 'password');
 
         if (Auth::guard('chairman')->attempt($credentials)) {
-            $admin = Auth::guard('chairman')->user();
-            $token = JWTAuth::fromUser($admin);
-            // $token = $admin->createToken('access_token')->accessToken;
+            $chairmen = Auth::guard('chairman')->user();
+            $token = JWTAuth::fromUser($chairmen);
+            // $token = $chairmen->createToken('access_token')->accessToken;
             return response()->json(['token' => $token]);
         }
 
@@ -63,7 +68,7 @@ class ChairmanAuthController extends Controller
     $token = $request->bearerToken();
 
     try {
-        // Check if the token is valid and get the authenticated admin
+        // Check if the token is valid and get the authenticated chairmen
         $user = Auth::guard('chairman')->setToken($token)->authenticate();
 
         // Check if the token's expiration time (exp) is greater than the current timestamp
@@ -102,8 +107,8 @@ public function logout(Request $request)
 
     public function checkToken(Request $request)
     {
-        $admin = $request->user('admin');
-        if ($admin) {
+        $chairmen = $request->user('chairman');
+        if ($chairmen) {
             return response()->json(['message' => 'Token is valid']);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);

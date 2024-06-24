@@ -36,35 +36,34 @@ class RouteServiceProvider extends ServiceProvider
                  ->namespace($this->namespace)
                  ->group(base_path('routes/web.php'));
 
-            // Register organization routes
-            Route::prefix('api')
-                 ->middleware(['api', 'auth:organization'])
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/organization_routes.php'));
-
             // Register admin routes
-            Route::prefix('api')
+            Route::prefix('auth')
                  ->middleware(['api', 'auth:admin'])
                  ->namespace($this->namespace)
                  ->group(base_path('routes/admin_routes.php'));
 
-            // Register student routes
-            Route::prefix('api')
-                 ->middleware(['api', 'auth:student'])
-                 ->namespace($this->namespace)
-                 ->group(base_path('routes/student_routes.php'));
 
             // Register chairman routes
-            Route::prefix('api')
+            Route::prefix('v')
                  ->middleware(['api', 'auth:chairman'])
                  ->namespace($this->namespace)
                  ->group(base_path('routes/chairman_routes.php'));
 
             // Register secretary routes
-            Route::prefix('api')
+            Route::prefix('auth')
                  ->middleware(['api', 'auth:secretary'])
                  ->namespace($this->namespace)
                  ->group(base_path('routes/secretary_routes.php'));
+
+            // Register sonod_routes routes
+            Route::prefix('v1')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/sonod_routes.php'));
+
+            // Register sonod_routes routes
+            Route::prefix('v1')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/holding_tax_routes.php'));
         });
     }
 

@@ -8,89 +8,136 @@ use App\Http\Controllers\Controller;
 
 class SonodController extends Controller
 {
-    public function sonod_submit(Request $request)
+    public function sonod_submit(Request $r)
     {
+        $id = $r->id;
+        $stutus = $r->stutus;
+        $successors = json_encode($r->successors);
+        $sonodEnName = Sonodnamelist::where('bnname', $r->sonod_name)->first();
+        $filepath = str_replace(' ', '_', $sonodEnName->enname);
+
+        $Insertdata = $r->except([
+            'sonod_Id', 'image', 'applicant_national_id_front_attachment',
+            'applicant_national_id_back_attachment', 'applicant_birth_certificate_attachment',
+            'successors', 'charages', 'Annual_income', 'applicant_type_of_businessKhat',
+            'applicant_type_of_businessKhatAmount', 'orthoBchor'
+        ]);
+
+        $Insertdata['applicant_type_of_businessKhat'] = $r->applicant_type_of_businessKhat;
+        $Insertdata['applicant_type_of_businessKhatAmount'] = $r->applicant_type_of_businessKhatAmount ?? 0;
+
+        if (in_array($r->sonod_name, ['একই নামের প্রত্যয়ন', 'বিবিধ প্রত্যয়নপত্র'])) {
+            $Insertdata['sameNameNew'] = 1;
+        }
+
+        $year = date('Y');
+        $date = date('m');
+        $orthobochor = $date < 7 ? ($year - 1) . "-" . date('y') : $year . "-" . (date('y') + 1);
+
+        $Insertdata['orthoBchor'] = $r->sonod_name == 'ট্রেড লাইসেন্স' ? $r->orthoBchor : $orthobochor;
+
+        $fileFields = [
+            'image' => "sonod/$filepath/" . date("Y/m/d") . "/",
+            'applicant_national_id_front_attachment' => "sonod/$filepath/" . date("Y/m/d") . "/",
+            'applicant_national_id_back_attachment' => "sonod/$filepath/" . date("Y/m/d") . "/",
+            'applicant_birth_certificate_attachment' => "sonod/$filepath/applicant_birth_certificate_attachment/"
+        ];
+
+        foreach ($fileFields as $field => $path) {
+            if (count(explode(';', $r->$field)) > 1) {
+                $Insertdata[$field] = fileupload($r->$field, $path . $this->allsonodId($r->unioun_name, $r->sonod_name, $orthobochor) . "/", 250, 300);
+            }
+        }
+
+        if ($r->Annual_income) {
+            $Insertdata['Annual_income'] = $r->Annual_income;
+            $Insertdata['Annual_income_text'] = (new NumberToBangla())->bnMoney(int_bn_to_en($r->Annual_income)) . ' মাত্র';
+        }
+
+        $Insertdata['successor_list'] = $successors;
+        $Uniouninfo = Uniouninfo::where('short_name_e', $r->unioun_name)->latest()->first();
+        $Insertdata = array_merge($Insertdata, [
+            'chaireman_name' => $Uniouninfo->c_name,
+            'c_email' => $Uniouninfo->c_email,
+            'chaireman_sign' => $Uniouninfo->c_signture,
+            'socib_name' => $Uniouninfo->socib_name,
+            'socib_email' => $Uniouninfo->socib_email,
+            'socib_signture' => $Uniouninfo->socib_signture
+        ]);
+
         try {
-            // Validate incoming request data
-            $validator = Validator::make($request->all(), [
-                // Define your validation rules here
-                // Example: 'name' => 'required|string|max:255',
-            ]);
+            $sonodId = (string)$this->allsonodId($r->unioun_name, $r->sonod_name, $orthobochor);
+            $Insertdata['sonod_Id'] = $sonodId;
 
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()->first()], 400);
+            if ($stutus == 'Prepaid') {
+                $totalamount = $r->charages['totalamount'];
+                $currently_paid_money = $totalamount - $r->last_years_money;
+                $amount_deails = json_encode([
+                    'total_amount' => $totalamount,
+                    'pesaKor' => $r->charages['pesaKor'],
+                    'tredeLisenceFee' => $r->charages['sonod_fee'],
+                    'vatAykor' => $r->charages['tradeVat'],
+                    'khat' => '',
+                    'last_years_money' => $r->last_years_money,
+                    'currently_paid_money' => $currently_paid_money
+                ]);
+
+                $Insertdata = array_merge($Insertdata, [
+                    'khat' => '',
+                    'last_years_money' => $r->last_years_money,
+                    'currently_paid_money' => $currently_paid_money,
+                    'total_amount' => $totalamount,
+                    'the_amount_of_money_in_words' => (new NumberToBangla())->bnMoney($totalamount) . ' মাত্র',
+                    'amount_deails' => $amount_deails
+                ]);
             }
 
-            // Retrieve data from request
-            $union = $request->unioun_name;
-            $sonodname = $request->sonod_name;
-            $orthoBchor = $request->orthoBchor; // Assuming this is part of the request data
+            $sonod = Sonod::create($Insertdata);
 
-            // Generate sonod_Id using allsonodId function
-            $sonodId = makeSonodId($union, $sonodname, $orthoBchor);
-
-            // Prepare data for Sonod creation
-            $data = $request->except([
-                'sonod_Id', 'image', 'applicant_national_id_front_attachment',
-                'applicant_national_id_back_attachment', 'applicant_birth_certificate_attachment',
-                'successors', 'charages', 'Annual_income', 'applicant_type_of_businessKhat',
-                'applicant_type_of_businessKhatAmount', 'orthoBchor'
-            ]);
-
-            $sonodEnName =  Sonodnamelist::where('bnname', $request->sonod_name)->first();
-            $filepath =  str_replace(' ', '_', $sonodEnName->enname);
-            $dateFolder = date("Y/m/d");
-            // Handle file uploads using FileHelper
-            $imagePath = FileHelper::uploadFile($request->file('image'),  "sonod/$filepath/$dateFolder/$sonodId/", ['image/jpeg', 'image/png'], 1024 * 250, 'public');
-            $data['image'] = $imagePath;
-
-            // Repeat similar process for other file uploads
-            $nationalIdFrontPath = FileHelper::uploadFile($request->file('applicant_national_id_front_attachment'), "sonod/$filepath/$dateFolder/$sonodId/", ['image/jpeg', 'image/png'], 1024 * 250, 'public');
-            $data['applicant_national_id_front_attachment'] = $nationalIdFrontPath;
-
-            $nationalIdBackPath = FileHelper::uploadFile($request->file('applicant_national_id_back_attachment'), "sonod/$filepath/$dateFolder/$sonodId/", ['image/jpeg', 'image/png'], 1024 * 250, 'public');
-            $data['applicant_national_id_back_attachment'] = $nationalIdBackPath;
-
-            $birthCertificatePath = FileHelper::uploadFile($request->file('applicant_birth_certificate_attachment'), "sonod/$filepath/$dateFolder/$sonodId/", ['image/jpeg', 'image/png'], 1024 * 250, 'public');
-            $data['applicant_birth_certificate_attachment'] = $birthCertificatePath;
-
-            // Handle Annual_income and generate Annual_income_text
-            $annualIncome = $request->Annual_income;
-            if (!empty($annualIncome)) {
-                $data['Annual_income'] = $annualIncome;
-                $data['Annual_income_text'] = $this->convertToBanglaMoney($annualIncome);
+            if ($stutus == 'Pending') {
+                $deccription = "Congratulation! Your application $sonod->sonod_Id has been submitted. Wait for approval.";
+                // smsSend($deccription, $sonod->applicant_mobile);
             }
 
-            // Handle successor_list JSON encoding
-            $successors = $request->successors;
-            if (!empty($successors)) {
-                $data['successor_list'] = json_encode($successors);
+            $notifiData = ['union' => $sonod->unioun_name, 'roles' => 'Secretary'];
+            $notificationsCount = Notifications::where($notifiData)->count();
+
+            if ($notificationsCount > 0) {
+                $action = makeshorturl(url('/secretary/approve/' . $sonod->id));
+                $notifications = Notifications::where($notifiData)->latest()->first();
+                $data = json_encode([
+                    "to" => $notifications->key,
+                    "notification" => [
+                        "body" => $sonod->applicant_name . " একটি " . $sonod->sonod_name . " এর নুতুন আবেদন করেছে",
+                        "title" => "সনদ নং " . int_en_to_bn($sonod->sonod_Id),
+                        "icon" => asset('assets/img/bangladesh-govt.png'),
+                        "click_action" => $action
+                    ]
+                ]);
+                pushNotification($data);
             }
 
-            // Get Uniouninfo details
-            $uniounInfo = Uniouninfo::where('short_name_e', $union)->latest()->first();
-            if (!$uniounInfo) {
-                throw new Exception('Uniouninfo not found for ' . $union);
-            }
-
-            // Assign chairman and socib details
-            $data['chaireman_name'] = $uniounInfo->c_name;
-            $data['c_email'] = $uniounInfo->c_email;
-            $data['chaireman_sign'] = $uniounInfo->c_signture;
-            $data['socib_name'] = $uniounInfo->socib_name;
-            $data['socib_email'] = $uniounInfo->socib_email;
-            $data['socib_signture'] = $uniounInfo->socib_signture;
-
-            // Create Sonod record
-            $sonod = Sonod::create($data);
-
-            // Send notifications if necessary (example)
-            $this->sendNotifications($sonod);
-
-            // Return the created Sonod object as JSON response
-            return response()->json(['sonod' => $sonod], 201);
+            return $sonod;
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return sent_error($e->getMessage(), $e->getCode());
         }
     }
+
+    public function sonodByKey(Request $request)
+    {
+        $sToken = $request->sToken;
+
+        $sonod = Sonod::where('uniqeKey', $sToken)->first();
+
+        if ($sonod) {
+            return $sonod;
+        }
+
+        return response()->json(['message' => 'Sonod not found'], 404);
+    }
+
+
+
+
+
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Sonod;
+
+
 function int_en_to_bn($number)
 {
 
@@ -63,3 +66,43 @@ function routeUsesMiddleware($route, $middlewareName)
     return false;
 }
 
+
+
+
+function makeSonodId($union, $sonodname, $orthoBchor)
+{
+    $sonodFinalId = '';
+
+    // Determine the sorting year based on current date
+    $sortYear = date('y');
+    if (date('m') < 7) {
+        $sortYear -= 1;
+    }
+    // Retrieve Uniouninfo and Sonod counts
+    $Uniouninfo = Uniouninfo::where('short_name_e', $union)->latest()->first();
+    if ($Uniouninfo) {
+        $Sonod = Sonod::where([
+            'unioun_name' => $union,
+            'sonod_name' => $sonodname,
+            'orthoBchor' => $orthoBchor
+        ])->latest()->first();
+
+        // Determine next sonod_Id
+        if ($Sonod) {
+            $sonodFinalId = $Sonod->sonod_Id + 1;
+        } else {
+            // If no Sonod exists, create a new sonod_Id
+            $sonod_Id = str_pad(1, 5, '0', STR_PAD_LEFT); // Start from 00001
+            $sonodFinalId = $Uniouninfo->u_code . $sortYear . $sonod_Id;
+        }
+    }
+
+    return $sonodFinalId;
+}
+
+
+ function convertToBanglaMoney($amount)
+{
+    $numToBangla = new NumberToBangla();
+    return $numToBangla->bnMoney(int_bn_to_en($amount)) . ' মাত্র';
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            margin-bottom: 6px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin-bottom: 12px;
+            padding-left: 20px;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .toc {
+            margin-bottom: 20px;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Project Documentation: [Project Name]</h1>
+    </header>
+
+    <nav class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#project-structure">Project Structure</a></li>
+            <li><a href="#api-routes">API Routes</a></li>
+            <li><a href="#authentication">Authentication</a></li>
+            <li><a href="#controllers">Controllers</a></li>
+            <li><a href="#models">Models</a></li>
+            <li><a href="#middleware">Middleware</a></li>
+            <li><a href="#environment-configuration">Environment Configuration</a></li>
+            <li><a href="#additional-features">Additional Features</a></li>
+            <li><a href="#deployment-instructions">Deployment Instructions</a></li>
+            <li><a href="#appendix">Appendix</a></li>
+        </ul>
+    </nav>
+
+    <section id="introduction">
+        <h2>Introduction</h2>
+        <p><strong>Project Overview:</strong> [Provide a brief overview of your project, its objectives, and its target audience.]</p>
+        <p><strong>Purpose of Documentation:</strong> [Explain why this documentation exists and how it should be used. Mention its importance for developers, stakeholders, or future contributors.]</p>
+    </section>
+
+    <section id="project-structure">
+        <h2>Project Structure</h2>
+        <h3>Directory Structure</h3>
+        <p>[Describe the directory structure of your Laravel project, including major directories like <code>app</code>, <code>config</code>, <code>database</code>, <code>routes</code>, etc.]</p>
+        <h3>Explanation of Major Directories</h3>
+        <p>[Detail the purpose of each major directory in your project and what kind of files they contain.]</p>
+    </section>
+
+    <section id="api-routes">
+        <h2>API Routes</h2>
+        <p>[Document all API routes used in your project, grouped by functionality. Include endpoint paths, HTTP methods, associated controllers, and any middleware applied.]</p>
+    </section>
+
+    <section id="authentication">
+        <h2>Authentication</h2>
+        <h3>Guards and Middleware</h3>
+        <p>[Explain the authentication guards used in your Laravel application (<code>web</code>, <code>api</code>, <code>admin</code>, <code>chairman</code>, <code>secretary</code>, <code>student</code>, <code>organization</code>). Describe the middleware applied for authentication.]</p>
+        <h3>Token-Based Authentication (JWT)</h3>
+        <p>[Detail how token-based authentication (JWT) is implemented in your project. Include configuration details from <code>.env</code> and any custom middleware.]</p>
+    </section>
+
+    <section id="controllers">
+        <h2>Controllers</h2>
+        <h3>List and Purpose of Controllers</h3>
+        <p>[List all controllers used in your project and explain their purpose or the specific functionalities they handle.]</p>
+        <h3>Controller Methods and Actions</h3>
+        <p>[Describe the methods or actions defined in each controller and what they are responsible for.]</p>
+    </section>
+
+    <section id="models">
+        <h2>Models</h2>
+        <h3>List of Models</h3>
+        <p>[Enumerate all models (<code>User</code>, <code>Admin</code>, <code>Chairman</code>, <code>Secretary</code>, etc.) used in your project.]</p>
+        <h3>Relationships and Attributes</h3>
+        <p>[Explain the relationships (e.g., <code>hasOne</code>, <code>hasMany</code>, <code>belongsTo</code>) defined in each model. Describe model attributes (<code>fillable</code>, <code>hidden</code>, <code>casts</code>) and any additional configurations.]</p>
+    </section>
+
+    <section id="middleware">
+        <h2>Middleware</h2>
+        <h3>Built-in and Custom Middleware</h3>
+        <p>[Document both built-in Laravel middleware (<code>auth</code>, <code>verified</code>, etc.) and any custom middleware (<code>checkPermission</code>, etc.) used in your application.]</p>
+        <h3>Middleware Application</h3>
+        <p>[Explain how middleware is applied to routes and controllers for handling specific functionalities or security measures.]</p>
+    </section>
+
+    <section id="environment-configuration">
+        <h2>Environment Configuration</h2>
+        <h3><code>.env</code> Variables</h3>
+        <p>[List important environment variables (<code>DB_CONNECTION</code>, <code>JWT_SECRET</code>, <code>ADMIN_JWT_SECRET</code>, etc.) and their purposes.]</p>
+        <h3>Configuration Specifics</h3>
+        <p>[Detail any specific configurations or settings relevant to your deployment environment.]</p>
+    </section>
+
+    <section id="additional-features">
+        <h2>Additional Features</h2>
+        <h3>Custom Commands</h3>
+        <p>[If applicable, list and describe any custom Artisan commands or other unique features of your Laravel application.]</p>
+        <h3>Third-Party Integrations</h3>
+        <p>[Mention any third-party packages or libraries integrated into your project and their roles.]</p>
+    </section>
+
+    <section id="deployment-instructions">
+        <h2>Deployment Instructions</h2>
+        <h3>Server Requirements</h3>
+        <p>[List the requirements for deploying your Laravel application, including server specifications or software dependencies.]</p>
+        <h3>Deployment Steps</h3>
+        <p>[Provide step-by-step instructions for deploying your Laravel application, from cloning the repository to running migrations and configuring environments.]</p>
+    </section>
+
+    <section id="appendix">
+        <h2>Appendix</h2>
+        <h3>Glossary</h3>
+        <p>[Define any technical terms or acronyms used throughout the documentation.]</p>
+        <h3>Troubleshooting</h3>
+        <p>[Include common issues and their solutions, or references to where users can find more help.]</p>
+        <h3>Contact Information</h3>
+        <p>[Provide contact details for support or further inquiries related to your project.]</p>
+    </section>
+
+</body>
+
+</html>

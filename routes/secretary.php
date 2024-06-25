@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SecretaryController;
+use App\Http\Controllers\API\Profile\SecretaryController;
 use App\Http\Controllers\Auth\secretary\SecretaryAuthController;
 
 Route::post('/login', [SecretaryAuthController::class, 'login']);
@@ -19,7 +19,7 @@ Route::middleware(['auth:secretary'])->group(function () {
         return 'secretary access';
     });
 
-    Route::get('/profile/{id}', [SecretaryController::class, 'show']);
-    Route::put('/profile/{id}', [SecretaryController::class, 'update']);
+    Route::get('/profile', [SecretaryController::class, 'profile']);
+    Route::post('/profile', [SecretaryController::class, 'updateProfile']);
     // Add other secretary-specific routes
 });

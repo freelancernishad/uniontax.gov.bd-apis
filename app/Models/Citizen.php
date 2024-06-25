@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Citizen extends Authenticatable
+class Citizen extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -37,66 +38,24 @@ class Citizen extends Authenticatable
     ];
 
     /**
-     * Get the name of the unique identifier for the user.
-     *
-     * @return string
-     */
-    public function getAuthIdentifierName()
-    {
-        return 'id';
-    }
-
-    /**
-     * Get the unique identifier for the user.
+     * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
      */
-    public function getAuthIdentifier()
+    public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
     /**
-     * Get the password for the user.
+     * Return a key value array, containing any custom claims to be added to the JWT.
      *
-     * @return string
+     * @return array
      */
-    public function getAuthPassword()
+    public function getJWTCustomClaims()
     {
-        return $this->password;
-    }
-
-    /**
-     * Get the token value for the "remember me" session.
-     *
-     * @return string
-     */
-    public function getRememberToken()
-    {
-        return $this->remember_token;
-    }
-
-    /**
-     * Set the token value for the "remember me" session.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public function setRememberToken($value)
-    {
-        $this->remember_token = $value;
-    }
-
-    /**
-     * Get the column name for the "remember me" token.
-     *
-     * @return string
-     */
-    public function getRememberTokenName()
-    {
-        return 'remember_token';
+        return [];
     }
 
     // Define any additional relationships or methods as needed
 }
-

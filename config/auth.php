@@ -39,11 +39,13 @@ return [
         'web' => [
             'driver' => 'jwt',
             'provider' => 'users',
+            'secret' => env('JWT_SECRET'), // Replace with your web secret key
         ],
 
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+            'secret' => env('JWT_SECRET'), // Replace with your api secret key
         ],
 
         'admin' => [
@@ -54,7 +56,7 @@ return [
 
         'chairman' => [
             'driver' => 'jwt',
-            'provider' => 'chairman',
+            'provider' => 'chairmen',
             'secret' => env('CHAIRMAN_JWT_SECRET'), // Replace with your chairman secret key
         ],
 
@@ -65,9 +67,9 @@ return [
         ],
 
         'citizen' => [
-            'driver' => 'token',
+            'driver' => 'jwt',
             'provider' => 'citizens',
-            'hash' => false,
+            'secret' => env('CITIZEN_JWT_SECRET'), // Replace with your citizen secret key
         ],
     ],
 
@@ -99,7 +101,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'chairman' => [
+        'chairmen' => [
             'driver' => 'eloquent',
             'model' => App\Models\Chairman::class,
         ],
@@ -108,7 +110,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Secretary::class,
         ],
-
 
         'citizens' => [
             'driver' => 'eloquent',
@@ -160,6 +161,13 @@ return [
         'secretaries' => [
             'provider' => 'secretaries',
             'table' => 'secretary_password_resets', // Example: Create a migration for this if needed
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'citizens' => [
+            'provider' => 'citizens',
+            'table' => 'citizen_password_resets', // Example: Create a migration for this if needed
             'expire' => 60,
             'throttle' => 60,
         ],

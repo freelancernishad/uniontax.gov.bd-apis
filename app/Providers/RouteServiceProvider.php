@@ -56,15 +56,15 @@ class RouteServiceProvider extends ServiceProvider
                  ->group(base_path('routes/chairman.php'));
 
             // Register secretary routes
-            Route::prefix('auth')
-                 ->middleware(['api', 'auth:secretary'])
+            Route::prefix('secretary')
+                //  ->middleware(['api', 'auth:secretary'])
                  ->namespace($this->namespace)
                  ->group(base_path('routes/secretary.php'));
 
 
             // Register secretary routes
-            Route::prefix('auth')
-                 ->middleware(['api', 'auth:citizen'])
+            Route::prefix('citizen')
+                //  ->middleware(['api', 'auth:citizen'])
                  ->namespace($this->namespace)
                  ->group(base_path('routes/citizen.php'));
 

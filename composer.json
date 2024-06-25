@@ -29,10 +29,12 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+             "App\\helper\\": "app/helper/"
         },
         "files": [
             "app/helper/functions.php",
+            "app/helper/FileHelper.php",
             "app/helper/imgur.php"
         ]
     },

@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ChairmanController;
+use App\Http\Controllers\API\Profile\ChairmanController;
 use App\Http\Controllers\Auth\chairman\ChairmanAuthController;
 
 
@@ -20,7 +20,7 @@ Route::middleware(['auth:chairman'])->group(function () {
         return 'chairman access';
     });
 
-    Route::get('/profile/{id}', [ChairmanController::class, 'show']);
-    Route::put('/profile/{id}', [ChairmanController::class, 'update']);
+    Route::get('/profile', [ChairmanController::class, 'profile']);
+    Route::post('/profile', [ChairmanController::class, 'updateProfile']);
     // Add other chairman-specific routes
 });

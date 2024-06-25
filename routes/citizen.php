@@ -1,14 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CitizenAuthController;
+use App\Http\Controllers\Auth\citizen\CitizenAuthController;
 
-Route::post('/citizen/login', [CitizenAuthController::class, 'login']);
-Route::post('/citizen/register', [CitizenAuthController::class, 'register']);
+Route::post('/login', [CitizenAuthController::class, 'login']);
+Route::post('/register', [CitizenAuthController::class, 'register']);
 
 Route::middleware(['auth:citizen'])->group(function () {
-    Route::post('/citizen/logout', [CitizenAuthController::class, 'logout']);
-    Route::get('/citizen-access', function (Request $request) {
+
+
+
+    Route::post('/check-token', [CitizenAuthController::class, 'checkToken']);
+    Route::post('/check/login', [CitizenAuthController::class, 'checkTokenExpiration']);
+
+    Route::post('/logout', [CitizenAuthController::class, 'logout']);
+    Route::get('/access', function (Request $request) {
         return 'citizen access';
     });
 

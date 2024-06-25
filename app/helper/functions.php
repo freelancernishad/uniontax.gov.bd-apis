@@ -62,3 +62,4 @@ function routeUsesMiddleware($route, $middlewareName)
 
     return false;
 }
+

@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Auth\secretary;
+namespace App\Http\Controllers\Auth\citizen;
 
-use App\Models\Secretaries;
+
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use App\Models\Secretary;
+use App\Models\Citizen;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class SecretaryAuthController extends Controller
+class CitizenAuthController extends Controller
 {
 
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:secretaries',
+            'email' => 'required|string|email|max:255|unique:citizens',
             'password' => 'required|string|min:8',
         ]);
 
@@ -29,21 +29,21 @@ class SecretaryAuthController extends Controller
         }
 
 
-        $secretaries = new Secretary([
+        $citizen = new Citizen([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
 
-        $secretaries->save();
+        $citizen->save();
         $payload = [
-            'name'=>$secretaries->name,
-            'email'=>$secretaries->email,
+            'name'=>$citizen->name,
+            'email'=>$citizen->email,
         ];
 
-        $token = JWTAuth::fromUser($secretaries);
+        $token = JWTAuth::fromUser($citizen);
 
-        return response()->json(['message' => 'Secretary registered successfully', 'token' => $token, 'payload' => $payload], 201);
+        return response()->json(['message' => 'Citizen registered successfully', 'token' => $token, 'payload' => $payload], 201);
         // Return a response or redirect
     }
 
@@ -51,14 +51,14 @@ class SecretaryAuthController extends Controller
     {
           $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('secretary')->attempt($credentials)) {
-            $secretary = Auth::guard('secretary')->user();
-            $token = JWTAuth::fromUser($secretary);
-            // $token = $secretary->createToken('access_token')->accessToken;
+        if (Auth::guard('citizen')->attempt($credentials)) {
+            $citizen = Auth::guard('citizen')->user();
+            $token = JWTAuth::fromUser($citizen);
+            // $token = $citizen->createToken('access_token')->accessToken;
 
             $payload = [
-                'name'=>$secretary->name,
-                'email'=>$secretary->email,
+                'name'=>$citizen->name,
+                'email'=>$citizen->email,
             ];
 
             return response()->json(['token' => $token,'payload' => $payload]);
@@ -74,13 +74,13 @@ class SecretaryAuthController extends Controller
     $token = $request->bearerToken();
 
     try {
-        // Check if the token is valid and get the authenticated secretary
-        $user = Auth::guard('secretary')->setToken($token)->authenticate();
+        // Check if the token is valid and get the authenticated citizen
+        $user = Auth::guard('citizen')->setToken($token)->authenticate();
 
         // Check if the token's expiration time (exp) is greater than the current timestamp
         $isExpired = JWTAuth::setToken($token)->checkOrFail();
 
-        return response()->json(['message' => 'Token is valid', 'secretary' => $user], 200);
+        return response()->json(['message' => 'Token is valid', 'citizen' => $user], 200);
     } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
         // Token has expired
         return response()->json(['message' => 'Token has expired'], 401);
@@ -113,8 +113,8 @@ public function logout(Request $request)
 
     public function checkToken(Request $request)
     {
-        $secretary = $request->user('secretary');
-        if ($secretary) {
+        $citizen = $request->user('citizen');
+        if ($citizen) {
             return response()->json(['message' => 'Token is valid']);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);

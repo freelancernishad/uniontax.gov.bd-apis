@@ -13,7 +13,7 @@ class Secretary extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'union', 'signature', 'type', 'email', 'password',
     ];
 
     protected $hidden = [

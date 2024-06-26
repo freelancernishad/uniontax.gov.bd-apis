@@ -10,6 +10,8 @@ Route::post('nagorik/seba/inserts', [SonodController::class, 'sonod_submit']);
 
 Route::get('get/sonod/by/key', [SonodController::class, 'sonodByKey']);
 
+
+
 Route::get('get/sonod/count', [SonodnamelistController::class, 'sonodCount']);
 
 Route::post('prottoyon/update/{id}', [SonodController::class, 'prottonupdate']);

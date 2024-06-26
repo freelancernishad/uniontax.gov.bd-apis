@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class HoldingTax extends Model
 {
     use HasFactory;
+    
+    protected $table = 'holdingtaxes';
 
     protected $fillable = [
         'category',

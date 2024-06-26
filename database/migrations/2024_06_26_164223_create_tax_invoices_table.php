@@ -24,7 +24,7 @@ class CreateTaxInvoicesTable extends Migration
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('holdingTax_id')->references('id')->on('holding_tax');
+            // $table->foreign('holdingTax_id')->references('id')->on('holding_tax');
 
             // Indexes
             $table->index('invoiceId');

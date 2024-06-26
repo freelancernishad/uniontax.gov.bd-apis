@@ -364,3 +364,12 @@ function holdingTaxAmount($category = 'মালিক নিজে বসবা
     // Convert the result to Bengali and return
     return int_bn_to_en((int)$current_year_kor);
 }
+
+
+
+function month_to_number($month)
+{
+    $monthName = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+    $monthNumber = array(1,2,3,4,5,6,7,8,9,10,11,12);
+    return str_replace($monthName, $monthNumber, $month);
+}

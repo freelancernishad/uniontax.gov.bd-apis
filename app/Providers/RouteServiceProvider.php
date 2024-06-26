@@ -77,6 +77,51 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('v1')
                  ->namespace($this->namespace)
                  ->group(base_path('routes/holding_tax.php'));
+
+
+            // Register geo routes
+            Route::prefix('geo')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/geo.php'));
+
+            // Register geo routes
+            Route::prefix('unioninfo')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/unioninfo.php'));
+
+
+            // Register geo routes
+            Route::prefix('tender')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/tender.php'));
+
+
+
+            // Register geo routes
+            Route::prefix('notification')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/notification.php'));
+
+
+
+
+            // Register geo routes
+            Route::prefix('api')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/payment.php'));
+
+
+
+            // Register geo routes
+            Route::prefix('api')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/visitor.php'));
+
+
+
+
+
+
         });
     }
 
